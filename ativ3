@@ -1,0 +1,67 @@
+1. Livro
+    - String titulo
+    - int numeroPaginas, numeroCapitulos
+    - date anoPublicacao;
+    - ArrayList<Pessoa> autores; 
+        (nome, endereço, telefone, email)
+    - Editora editora
+        (nome, endereço, telefone, <Pessoa> clientes)
+    - ArrayList<Capitulo> capitulos;
+    - Capitulo
+        (String titulo, int numeroPaginas)
+
+    + AdicionarCapitulo(Capitulo capitulo): void
+    + RemoverCapitulo(Capitulo capitulo): void
+
+2. Círculo
+    - double raio
+
+    + CalcularArea(double raio): double
+    + CalcularPerimetro(double raio): double
+    + CalcularDiametro(double raio): double
+    + CalcularCircunferencia(double raio): double
+
+3. Filme
+    - String titulo, genero
+    - ArrayList<Pessoa> elenco;
+    - Pessoa diretor;
+    - int anoLancamento;
+    - double nota, duração
+    - enum classificação
+
+4. Pessoa
+    - String nome, CPF, email, sexo, endereço
+    - int idade, telefone
+
+5. Aluno
+    - String matricula, curso
+    - ArrayList<Disciplina> disciplinas
+    - Disciplina
+        (String nome, String codigo, int cargaHoraria, <HashMap<Avaliação, Double>> nota)
+
+    + matricularDisciplina(Disciplina disciplina): void
+    + removerDisciplina(Disciplina disciplina): void
+    + calcularMedia(disciplina): double
+    + adicionarNota(Disciplina disciplina, double nota): void
+
+
+6. Item de estoque
+- String codigo
+- int quantidade
+- double preco
+
++ adicionarEstoque(int qtd): void
++ retirarEstoque(int qtd): void
++ calcularValorEstoque(): double
++ exibirDados(): void
+
+
+7. Conta bancária
+-String numeroConta, agencia
+-Pessoa titular
+-double saldo
+
++ depositar(double valor ): void
++ sacar(double valor): boolean
++ transferir(ContaBancaria conta, double valor): boolean
++ consultarSaldo(): double
