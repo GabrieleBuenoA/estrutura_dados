@@ -1,36 +1,50 @@
-public class Funcionário {
+public class Funcionario {
 
     private String idFuncionario;
     private String nomeFuncionario;
-    private double salario;
-    private double bonusProjeto;
+    private double salarioBase;
+    private int projetosConcluidos;
+    private double salarioFinal;
 
-
-    public Funcionario(String idFuncionario, String nomeFuncionario, double salario) {
+    public Funcionario(String idFuncionario, String nomeFuncionario, double salarioBase) {
         this.idFuncionario = idFuncionario;
         this.nomeFuncionario = nomeFuncionario;
-        this.salario = salario;
-        this.bonusProjeto = 0;
+        this.salarioBase = salarioBase;
+        this.salarioFinal = salarioBase;
+        this.projetosConcluidos = 0;
     }
 
-    public void setSalario(double novoSalario){
-        this.salario = novoSalario;
-    }
-    
-    public double getSalario(){
-        return salario;
+    public String getIdFuncionario() {
+        return idFuncionario;
     }
 
-    public void setbonusProjetos(double bonusProjeto){
-        this.bonusProjeto = bonusProjeto;
-    }
-    
-    public double bonusProjetos(){
-        return bonusProjeto;
+    public String getNomeFuncionario() {
+        return nomeFuncionario;
     }
 
+    public double getSalarioBase() {
+        return salarioBase;
+    }
 
+    public double getSalarioFinal() {
+        return salarioFinal;
+    }
 
+    public void setSalarioFinal() {
+        salarioFinal = salarioBase + ((projetosConcluidos * 0.10) * salarioBase);
+    }
 
+    public void incrementarProjetosConcluidos() {
+        projetosConcluidos++;
+        setSalarioFinal();
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: " + nomeFuncionario + 
+        "Salário Base: R$ " + String.format("%.2f", salarioBase) + 
+        "Bônus de Projetos: " + ((projetosConcluidos * 0.10) * salarioBase) + 
+        "Salário Final: R$ " + String.format("%.2f", salarioFinal);
+    }
 
 }
