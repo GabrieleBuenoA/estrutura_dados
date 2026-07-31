@@ -5,7 +5,8 @@
     - ArrayList<Pessoa> autores; 
         (nome, endereço, telefone, email)
     - Editora editora
-        (nome, endereço, telefone, <Pessoa> clientes)
+        (nome, endereço, telefone, <Pessoa> clientes, <Livros> publicacoes)
+
     - ArrayList<Capitulo> capitulos;
     - Capitulo
         (String titulo, int numeroPaginas)
@@ -29,9 +30,17 @@
     - double nota, duração
     - enum classificação
 
+    + atualizarNota(double): boolean
+
 4. Pessoa
-    - String nome, CPF, email, sexo, endereço
+    - String nome, sobrenome, CPF, email, sexo, endereço
     - int idade, telefone
+
+    + adicionarEmail (String): boolean
+    + adicionarTelefone (int): boolean
+    + removerEmail (String): boolean
+    + removerTelefone (int): boolean
+
 
 5. Aluno
     - String matricula, curso
@@ -39,10 +48,10 @@
     - Disciplina
         (String nome, String codigo, int cargaHoraria, <HashMap<Avaliação, Double>> nota)
 
-    + matricularDisciplina(Disciplina disciplina): void
-    + removerDisciplina(Disciplina disciplina): void
+    + matricularDisciplina(Disciplina disciplina): boolean
+    + removerDisciplina(Disciplina disciplina): boolean
     + calcularMedia(disciplina): double
-    + adicionarNota(Disciplina disciplina, double nota): void
+    + adicionarNota(Disciplina disciplina, double nota): boolean
 
 
 6. Item de estoque
@@ -61,7 +70,7 @@
 -Pessoa titular
 -double saldo
 
-+ depositar(double valor ): void
++ depositar(double valor): boolean
 + sacar(double valor): boolean
 + transferir(ContaBancaria conta, double valor): boolean
 + consultarSaldo(): double
