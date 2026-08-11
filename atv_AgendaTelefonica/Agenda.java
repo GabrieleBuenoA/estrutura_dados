@@ -11,27 +11,28 @@ public Agenda(int tamanho) {
     this.agenda = new Contato[tamanho];
 }
 
+
 public boolean verificarNomeLivre(String nome) {
     for (Contato contato : agenda) {
         if (nome.equals(contato.getNome())) {
             System.out.printf("Contato já registrado");
             return false;
-        } else {
-            return true;
         }
     }
+    return true;
 }
+
 
 public boolean verificarTelefoneLivre(String telefone) {
     for (Contato contato : agenda) {
         if (telefone.equals(contato.getTelefone())){
             System.out.printf("Número já registrado");
             return false;
-        } else {
-            return true;
         }
     }
+    return true;
 }
+
 
 public int getPosição(Contato contato){
     if (!verificarNomeLivre(contato.getNome()) || !verificarTelefoneLivre(contato.getTelefone())) {
@@ -43,6 +44,7 @@ public int getPosição(Contato contato){
     }
     return -1;
 }
+
 
 public void adicionarContato(Contato contato) {
     if (!verificarNomeLivre(contato.getNome())){ 
@@ -63,9 +65,9 @@ public void adicionarContato(Contato contato) {
     }
     else{
         System.out.println("Agenda cheia. Não é possível adicionar mais contatos.");
-    }
-    
+    }    
 }
+
 
 public void removerContato(Contato nomeContato) {
     if (!verificarNomeLivre(nomeContato.getNome())) {
@@ -81,45 +83,24 @@ public void removerContato(Contato nomeContato) {
     }
 }
 
+
 public void atualizarContato(Contato contato, String novoNome, String novoTelefone, String novoEmail) {
-    if (!verificarNomeLivre(contato.getNome()) || !verificarTelefoneLivre(contato.getTelefone())) {
-        var indice = getPosição(contato);
-        
-        
 
-        for agenda[indice]{
-
-            contato.setNome(novoNome); 
-            contato.setTelefone(novoTelefone);
-            contato.setEmail(novoEmail);
-
-            (novoNome, novoTelefone, novoEmail);
-
-
-            System.out.println("Contato atualizado com sucesso.");
-            return;
-        }
-
-
-
-        if (agenda[i] != null && agenda[i].getNome().equals(contato.getNome())) {
-            agenda[i] = new Contato(novoNome, novoTelefone, novoEmail);
-            System.out.println("Contato atualizado com sucesso.");
-            return;
-        }
+    int indice = getPosição(contato);
+    if (indice == -1) {
+        System.out.println("Contato não encontrado.");
+        return;
     }
-    System.out.println("Contato não encontrado.");
+    if (!novoNome.equals(contato.getNome()) && !verificarNomeLivre(novoNome)) {
+        System.out.println("Nome já está sendo utilizado.");
+        return;
+    }
+    contato.setNome(novoNome);
+    contato.setTelefone(novoTelefone);
+    contato.setEmail(novoEmail);
+
+    System.out.println("Contato atualizado com sucesso.");
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

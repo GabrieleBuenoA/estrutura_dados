@@ -1,4 +1,4 @@
-package atv_array;
+package VetorDinamico;
 
 public class VetorEstatico {
 
@@ -72,8 +72,6 @@ public class VetorEstatico {
         elementos[tamanho-1] = null;
         tamanho--;
     }
-
-
 
     public void remover(String elemento) {
         for (int i = 0; i < tamanho ; i++) {
