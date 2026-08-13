@@ -1,4 +1,4 @@
-package atv_array;
+package eh.atv_array;
 public class ex3{
     public static void main() {
         VetorEstatico vetor = new VetorEstatico(10);

@@ -1,15 +1,15 @@
-public class Vetor<T> {
+package eh.VetorDinamico;
 
-    private T[] elementos;
+public class VetorDinamico {
+
+    private String[] elementos;
     private int tamanho;
 
-
-    @SuppressWarnings("unchecked")
-    public Vetor(int quantidade){
-        elementos = (T[]) new Object[quantidade];
-        tamanho = 0;
-        
+    public VetorDinamico(int quantidade) {
+        elementos = new String[quantidade];
+        this.tamanho = 0;
     }
+
 
     public void inserir(String elemento) {
         if (tamanho == elemento.length()) {
@@ -31,7 +31,7 @@ public class Vetor<T> {
     private void reduzir() {
         
         if (tamanho <= elementos.length/4) { ///quando diminuir
-            T[] novo = (T[]) new String[elementos.length/2]; //quanto diminuir
+            String[] novo = new String[elementos.length/2]; //quanto diminuir
             for (int i = 0; i < elementos.length; i++) {
                 novo[i] = elementos[i];
         }
@@ -53,3 +53,21 @@ public class Vetor<T> {
         reduzir();
     }
     
+
+
+
+
+
+
+
+    public void imprimir() {
+        System.out.print("[");
+        for (int i = 0; i < elementos.length ; i++) {
+            System.out.print(elementos[i]);
+            if (i < elementos.length -1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+    }
+}

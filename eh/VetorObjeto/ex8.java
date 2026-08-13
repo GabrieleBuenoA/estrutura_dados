@@ -1,3 +1,4 @@
+package eh.VetorObjeto;
 public class ex8 {
 
  static void main()   {

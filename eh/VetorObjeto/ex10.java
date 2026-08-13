@@ -1,4 +1,4 @@
-import VetorObjeto.Vetor;
+package eh.VetorObjeto;
 
 public class ex10 {
     

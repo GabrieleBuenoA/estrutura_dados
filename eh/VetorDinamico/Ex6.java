@@ -1,4 +1,4 @@
-package VetorDinamico;
+package eh.VetorDinamico;
 
 public class Ex6 {
 

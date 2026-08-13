@@ -1,3 +1,7 @@
+package vetor.testes;
+
+import vetor.Caixa;
+
 public class ex9 {
 
     static void main() {
@@ -6,9 +10,14 @@ public class ex9 {
         caixaTexto.guardar("Olá mundo");
         System.out.println(caixaTexto.abrir());
 
-        Caixa<Interger> caixaNumero = new Caixa<>();
+        Caixa<Integer> caixaNumero = new Caixa<>();
         caixaNumero.guardar(50);
         System.out.println(caixaNumero.abrir());
+
+
+
     }
-    
+
+
+
 }

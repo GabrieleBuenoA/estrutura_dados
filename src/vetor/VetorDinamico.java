@@ -1,4 +1,4 @@
-package VetorDinamico;
+package vetor;
 
 public class VetorDinamico {
 
@@ -10,14 +10,12 @@ public class VetorDinamico {
         this.tamanho = 0;
     }
 
-
     public void inserir(String elemento) {
-        if (tamanho == elemento.length()) {
-            expandir ();
-        } else {
+        if (tamanho == elementos.length) {
+            expandir();
+        }
         elementos[tamanho] = elemento;
         tamanho++;
-        }
     }
 
     private void expandir() {
@@ -25,37 +23,31 @@ public class VetorDinamico {
         for (int i = 0; i < elementos.length; i++) {
             novo[i] = elementos[i];
         }
-        this.elementos = novo;
-    }
-      
-    private void reduzir() {
-        
-        if (tamanho <= elementos.length/4) { ///quando diminuir
-            String[] novo = new String[elementos.length/2]; //quanto diminuir
-            for (int i = 0; i < elementos.length; i++) {
-                novo[i] = elementos[i];
-        }
         elementos = novo;
-        }   
     }
 
-    public void remover (int indice) {
-        if (indice < 0 || indice >= tamanho){
-            System.out.println("Indice inválido");
+    private void reduzir() {
+        if (tamanho <= elementos.length/4) {
+            String[] novo = new String[elementos.length/2];
+            for (int i = 0; i < tamanho; i++) {
+                novo[i] = elementos[i];
+            }
+            elementos = novo;
+        }
+    }
+
+    public void remover(int indice) {
+        if (indice < 0 || indice >= tamanho) {
+            System.out.println("Indice Inválido");
             return;
         }
-        for (int i = indice; i < tamanho; i++){
+        for (int i = indice; i < tamanho; i++) {
             elementos[i] = elementos[i+1];
         }
-
         elementos[tamanho-1] = null;
         tamanho--;
         reduzir();
     }
-    
-
-
-
 
 
 
@@ -70,4 +62,7 @@ public class VetorDinamico {
         }
         System.out.println("]");
     }
+
+
+
 }
