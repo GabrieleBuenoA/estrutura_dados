@@ -1,7 +1,5 @@
-import javax.swing.*;
 import java.util.Scanner;
 
-public class MainAgenda {
 
 //    public static void main(String[] args) {
 //
