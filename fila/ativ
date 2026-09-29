@@ -1,0 +1,226 @@
+import java.util.Random;
+
+class Requisicao {
+    int id;
+    int tamanho;
+    int prioridade;
+
+    public Requisicao(int id, int tamanho, int prioridade) {
+        this.id = id;
+        this.tamanho = tamanho;
+        this.prioridade = prioridade;
+    }
+}
+
+public class SimuladorFila {
+
+    public static void main(String[] args) {
+
+        // Configurações da simulação
+        int ciclos = 100000;
+        int capacidadeFila = 50;
+        int processadores = 4;
+        int maxChegadasPorCiclo = 10;
+
+        Random random = new Random();
+
+        // Vetor de objetos que representa a fila
+        Requisicao[] fila = new Requisicao[capacidadeFila];
+
+        int quantidadeNaFila = 0;
+
+        int totalChegadas = 0;
+        int totalAtendidas = 0;
+        int totalPerdidas = 0;
+
+        int proximoId = 1;
+
+        // Executa vários ciclos
+        for (int ciclo = 0; ciclo < ciclos; ciclo++) {
+
+            // --------------------------------------------------
+            // 1. O servidor atende as requisições
+            // --------------------------------------------------
+
+            int atendimentos = Math.min(processadores, quantidadeNaFila);
+
+            // Remove as requisições atendidas do início da fila
+            for (int i = 0; i < quantidadeNaFila - atendimentos; i++) {
+                fila[i] = fila[i + atendimentos];
+            }
+
+            // Limpa as posições que ficaram vazias
+            for (int i = quantidadeNaFila - atendimentos;
+                 i < quantidadeNaFila; i++) {
+                fila[i] = null;
+            }
+
+            quantidadeNaFila -= atendimentos;
+            totalAtendidas += atendimentos;
+
+            // --------------------------------------------------
+            // 2. Chegam novas requisições
+            // --------------------------------------------------
+
+            // Número aleatório de novas requisições: 0 até maxChegadasPorCiclo
+            int novasRequisicoes =
+                    random.nextInt(maxChegadasPorCiclo + 1);
+
+            for (int i = 0; i < novasRequisicoes; i++) {
+
+                totalChegadas++;
+
+                // A fila está cheia
+                if (quantidadeNaFila >= capacidadeFila) {
+                    totalPerdidas++;
+                    continue;
+                }
+
+                // Cria uma nova requisição
+                Requisicao requisicao = new Requisicao(
+                        proximoId++,
+                        random.nextInt(1000) + 1, // tamanho
+                        random.nextInt(5) + 1      // prioridade
+                );
+
+                // Insere no final da fila
+                fila[quantidadeNaFila] = requisicao;
+                quantidadeNaFila++;
+            }
+        }
+
+        // --------------------------------------------------
+        // Resultados
+        // --------------------------------------------------
+
+        double probabilidadePerda =
+                (double) totalPerdidas / totalChegadas;
+
+        System.out.println("===== RESULTADO DA SIMULAÇÃO =====");
+        System.out.println("Ciclos: " + ciclos);
+        System.out.println("Capacidade da fila: " + capacidadeFila);
+        System.out.println("Processadores: " + processadores);
+        System.out.println("Máximo de chegadas/ciclo: "
+                + maxChegadasPorCiclo);
+
+        System.out.println();
+        System.out.println("Total de chegadas: " + totalChegadas);
+        System.out.println("Total atendidas: " + totalAtendidas);
+        System.out.println("Total perdidas: " + totalPerdidas);
+
+        System.out.printf(
+                "Probabilidade de perda: %.2f%%%n",
+                probabilidadePerda * 100
+        );
+    }
+}
+
+
+
+
+import java.util.Random;
+
+public class Servidor {
+
+    private int totalRegGeradas = 0;
+    private int totalRegAtendidas = 0;
+    private int totalRegPerdidas = 0;
+
+    private Random aleatorio;
+    private Fila<String> fila;
+    private int numProcessadores;
+
+    public Servidor(Fila<String> fila, int numProcessadores) {
+        this.fila = fila;
+        this.numProcessadores = numProcessadores;
+        this.aleatorio = new Random();
+    }
+
+    public void executar(int ciclos, int maxNovasReq) {
+
+        for (int ciclo = 1; ciclo <= ciclos; ciclo++) {
+
+            // 1. Gerar novas requisições
+            int novasReq = aleatorio.nextInt(maxNovasReq + 1);
+
+            for (int i = 0; i < novasReq; i++) {
+                String requisicao = "Req-" + (totalRegGeradas + 1);
+
+                fila.enfileirar(requisicao);
+                totalRegGeradas++;
+            }
+
+            // 2. Processar as requisições
+            for (int i = 0; i < numProcessadores; i++) {
+
+                if (!fila.estaVazia()) {
+                    String requisicao = fila.desenfileirar();
+
+                    // Processou a requisição
+                    totalRegAtendidas++;
+
+                    System.out.println(
+                        "Ciclo " + ciclo +
+                        " - Processando " + requisicao
+                    );
+                }
+            }
+        }
+
+        // O que sobrou na fila são requisições não atendidas
+        totalRegPerdidas = fila.tamanho();
+
+        System.out.println("\n--- Resultado ---");
+        System.out.println("Geradas: " + totalRegGeradas);
+        System.out.println("Atendidas: " + totalRegAtendidas);
+        System.out.println("Perdidas: " + totalRegPerdidas);
+    }
+}
+
+
+import java.util.Random;
+
+public class Servidor {
+
+    private int totalReqGeradas = 0;
+    private int totalReqAtendidas = 0;
+    private int totalReqPerdidas = 0;
+
+    private Random aleatorio;
+    private Fila<String> fila;
+    private int numProcessadores;
+
+    public Servidor(Random aleatorio, Fila<String> fila, int numProcessadores) {
+        this.aleatorio = aleatorio;
+        this.fila = fila;
+        this.numProcessadores = numProcessadores;
+    }
+
+    public void executar(int ciclos) {
+
+        for (int ciclo = 1; ciclo <= ciclos; ciclo++) {
+
+            // Processar requisições existentes na fila
+            for (int i = 0; i < numProcessadores; i++) {
+
+                if (!fila.estaVazia()) {
+                    String requisicao = fila.desenfileirar();
+
+                    totalReqAtendidas++;
+                }
+            }
+
+            // Gerar novas requisições
+            int novasReq = aleatorio.nextInt(5) + 1;
+
+            for (int i = 0; i < novasReq; i++) {
+
+                String requisicao = "Req-" + (totalReqGeradas + 1);
+
+                fila.enfileirar(requisicao);
+
+                totalReqGeradas++;
+            }
+        }
+    }
+}
