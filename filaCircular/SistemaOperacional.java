@@ -1,135 +1,78 @@
-import java.util.Random;
+public class SistemaOperacional {
 
-public class Servidor {
-    
-    private int totalReqGeradas = 0;
-    private int totalReqAtendidas = 0;
-    private int totalReqPerdidas = 0;
-    private Random aleatorio;
-    private Fila<String> fila;
-    private int numProcessadores;
-    private int N; /////max de requisições na fila
-    private int novasReq;
+    private final FilaCircular<Processo> filaProcessos;
+    private final Processo[] processos;
+    private static final int QUANTUM = 2;           // numero de instruções por vez.
 
-    public Servidor(int capacidadeFila, int numProcessadores, int N) {
-        if ((N <= 0) || (capacidadeFila <= 0) || (numProcessadores <= 0)) {
-            System.out.println("Valor inválido");
-        }
-        this.aleatorio = new Random();
-        this.fila = new Fila<>(capacidadeFila);
-        this.numProcessadores = numProcessadores;
-        this.N = N;
-        this.novasReq = 0;
+
+    public SistemaOperacional() {
+        filaProcessos = new FilaCircular<>(16);
+        processos = new Processo[5];
+
+        processos[0] = new Processo("Processo I", 7, 0);
+        processos[1] = new Processo("Processo II", 4, 0);
+        processos[2] = new Processo("Processo III", 5, 1);
+        processos[3] = new Processo("Processo IV", 6, 2);
+        processos[4] = new Processo("Processo V", 3, 4);
     }
-    
-    public void executar(int ciclos) {              //
-        for (int ciclo = 0; ciclo < ciclos; ciclo++) {
-            for (int i = 0; i < numProcessadores; i++) {
-                if (!fila.isEmpty()) {
-                    fila.desenfileirar();
-                    totalReqAtendidas++;
+
+    public void executar() {
+
+        //enfileira o processo de acordo com o tempo 
+        int tempo = 0;
+
+        for (int i = 0; i < processos.length; i++) {
+
+            if (processos[i].getTempoChegada() == tempo) { 
+                filaProcessos.enfileirar(processos[i]); 
+                System.out.println("Tempo " + tempo + ": " + processos[i].getNome() + " chegou e entrou na fila."); 
+            }
+        }
+
+        //dedenfileira o processo da vez e executa pelo quantum
+        while (!filaProcessos.isEmpty()) {
+            Processo processo = filaProcessos.desenfileirar();
+            processo.setStatus(Status.EXECUTANDO);
+
+            try {
+                System.out.println(processo.getNome() + " executando...");
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            int instrucoesExecutadas = (processo.getInstrucoesRestantes() < QUANTUM) ? processo.getInstrucoesRestantes() : QUANTUM;
+
+            processo.setInstrucoesRestantes(processo.getInstrucoesRestantes() - instrucoesExecutadas);
+  
+            System.out.println("Tempo " + tempo + ": " + processo.getNome() + " executou " + instrucoesExecutadas + " instrucoes. Restam " + processo.getInstrucoesRestantes());
+            
+
+        //organiza o status do processo 
+            if (processo.getInstrucoesRestantes() == 0) { 
+                processo.setStatus(Status.TERMINADO); 
+                System.out.println("Tempo " + tempo + ": " + processo.getNome() + " terminou!");
+            } else {
+                processo.setStatus(Status.PRONTO);
+                filaProcessos.enfileirar(processo);
+                System.out.println("Tempo " + tempo + ": " + processo.getNome() + " voltou para o fim da fila.");
+            }
+
+            tempo++;
+
+            for (int i = 0; i < processos.length; i++) { 
+                if (processos[i].getTempoChegada() == tempo && processos[i].getStatus() == Status.PRONTO) {
+                    filaProcessos.enfileirar(processos[i]); 
+                    System.out.println("Tempo " + tempo + ": " + processos[i].getNome() + " chegou e entrou na fila."); 
                 }
             }
-
-            novasReq = aleatorio.nextInt(1, N-1);
-            totalReqGeradas += novasReq;
-            
-            if (novasReq > fila.espacoDisponivel()) {
-                totalReqPerdidas += (novasReq - fila.espacoDisponivel());
-                novasReq = fila.espacoDisponivel();
-            }
-            
-            for (int j = 0; j < novasReq; j++) {
-                fila.enfileirar ("Requisição " + (j+1));
-            }            
         }
+
+        System.out.println("Simulacao concluida.");
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public int getTotalReqGeradas() {
-        return totalReqGeradas;
-    }
-
-    public int getTotalReqAtendidas() {
-        return totalReqAtendidas;
-    }
-
-    public int getTotalReqPerdidas() {
-        return totalReqPerdidas;
-    }
-
-    public double getProbabilidadePerda() {
-        if (totalReqGeradas == 0) {
-            return Double.NaN;
-        }
-        return (double) totalReqPerdidas / totalReqGeradas;
-    }
-
-    public void imprimirRelatorio() {
-        System.out.println("Requisições geradas: " + totalReqGeradas);
-        System.out.println("Requisições atendidas: " + totalReqAtendidas);
-        System.out.println("Requisições perdidas: " + totalReqPerdidas);
-
-        if (totalReqGeradas == 0) {
-            System.out.println("Taxa de perda: não calculável (nenhuma requisição gerada)");
-        } else {
-            System.out.printf("Taxa de perda: %.2f%%%n", getProbabilidadePerda() * 100);
-        }
+    public static void main(String[] args) {
+        SistemaOperacional sistema = new SistemaOperacional();
+        sistema.executar();
     }
 }
-    
-
-
-
-
-
-
-
-
-
-
-
-    //                     if (!fila.isFull()) {
-    //                         fila.enfileirar("Requisição " + (totalReqGeradas + 1));
-    //                         totalReqGeradas++;
-    //                     } else {
-    //                         totalReqPerdidas++;
-    //                     }
-    //                 }             
-
-    //             totalReqPerdidas++;
-    //         }
-            
-
-
-    //         //simulação aqui
-    //         //for pro n de pricessadoes
-    //         //fila.desenfileirar();
-    //         // totalReqGeradas++
-    //         int novasReq = aleatorio.nextInt(1, N-1);
-    //         //gerar as novasReq requisiçõies e adicionar na fila
-            
-    //     }
-
-    // }
-
-
-
-
-
-
